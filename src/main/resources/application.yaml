@@ -1,4 +1,12 @@
+server:
+  port: 8088
 spring:
+  jpa:
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
   datasource:
     url: jdbc:h2:mem:restaurant_voting
     username: sa
