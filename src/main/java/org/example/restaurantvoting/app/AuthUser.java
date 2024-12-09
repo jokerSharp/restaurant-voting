@@ -1,8 +1,8 @@
 package org.example.restaurantvoting.app;
 
 import lombok.Getter;
-import org.example.restaurantvoting.model.Role;
-import org.example.restaurantvoting.model.User;
+import org.example.restaurantvoting.user.model.Role;
+import org.example.restaurantvoting.user.model.User;
 import org.springframework.lang.NonNull;
 
 public class AuthUser extends org.springframework.security.core.userdetails.User {

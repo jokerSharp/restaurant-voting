@@ -1,4 +1,4 @@
-package org.example.restaurantvoting.model;
+package org.example.restaurantvoting.user.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

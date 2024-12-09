@@ -1,7 +1,7 @@
-package org.example.restaurantvoting.web;
+package org.example.restaurantvoting.user.web;
 
 import jakarta.validation.Valid;
-import org.example.restaurantvoting.model.User;
+import org.example.restaurantvoting.user.model.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
