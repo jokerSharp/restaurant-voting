@@ -3,9 +3,9 @@ package org.example.restaurantvoting.app.config;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.restaurantvoting.app.AuthUser;
-import org.example.restaurantvoting.model.Role;
-import org.example.restaurantvoting.model.User;
-import org.example.restaurantvoting.repository.UserRepository;
+import org.example.restaurantvoting.user.model.Role;
+import org.example.restaurantvoting.user.model.User;
+import org.example.restaurantvoting.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -51,7 +51,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").authorizeHttpRequests(authz ->
                         authz.requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
+                                .requestMatchers(HttpMethod.POST, "/api/profile").hasRole(Role.ADMIN.name())
                                 .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/**").authenticated())
                 .httpBasic(withDefaults())

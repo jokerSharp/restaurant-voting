@@ -1,4 +1,4 @@
-package org.example.restaurantvoting.model;
+package org.example.restaurantvoting.user.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.restaurantvoting.common.HasIdAndEmail;
+import org.example.restaurantvoting.common.model.NamedEntity;
 import org.springframework.lang.NonNull;
 
 import java.util.*;

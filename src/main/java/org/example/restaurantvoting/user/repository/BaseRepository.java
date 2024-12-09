@@ -1,4 +1,4 @@
-package org.example.restaurantvoting.repository;
+package org.example.restaurantvoting.user.repository;
 
 import org.example.restaurantvoting.common.exception.NotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
