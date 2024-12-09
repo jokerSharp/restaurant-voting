@@ -1,7 +1,7 @@
-package org.example.restaurantvoting.web;
+package org.example.restaurantvoting.user.web;
 
-import org.example.restaurantvoting.model.User;
-import org.example.restaurantvoting.repository.UserRepository;
+import org.example.restaurantvoting.user.model.User;
+import org.example.restaurantvoting.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
