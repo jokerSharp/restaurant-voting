@@ -1,4 +1,4 @@
-package org.example.restaurantvoting.common.util;
+package org.example.restaurantvoting.common.validation;
 
 import lombok.experimental.UtilityClass;
 import org.example.restaurantvoting.common.HasId;
