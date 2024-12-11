@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.restaurantvoting.common.HasIdAndEmail;
 import org.example.restaurantvoting.common.model.NamedEntity;
+import org.example.restaurantvoting.common.validation.NoHtml;
 import org.springframework.lang.NonNull;
 
 import java.util.*;
@@ -32,8 +33,8 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(max = 128)
-    // https://stackoverflow.com/a/12505165/548473
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NoHtml
     private String password;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
