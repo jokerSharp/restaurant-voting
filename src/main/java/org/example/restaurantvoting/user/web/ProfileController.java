@@ -16,8 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-import static org.example.restaurantvoting.common.util.ValidationUtil.assureIdConsistent;
-import static org.example.restaurantvoting.common.util.ValidationUtil.checkNew;
+import static org.example.restaurantvoting.common.validation.ValidationUtil.assureIdConsistent;
+import static org.example.restaurantvoting.common.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)

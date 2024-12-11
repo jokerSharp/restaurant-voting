@@ -6,14 +6,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
-import static org.example.restaurantvoting.common.util.ValidationUtil.assureIdConsistent;
-import static org.example.restaurantvoting.common.util.ValidationUtil.checkNew;
+import static org.example.restaurantvoting.common.validation.ValidationUtil.assureIdConsistent;
+import static org.example.restaurantvoting.common.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -21,11 +22,13 @@ public class AdminUserController extends AbstractUserController{
 
     static final String REST_URL = "/api/admin/users";
 
+    @Override
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         return super.get(id);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -65,6 +68,7 @@ public class AdminUserController extends AbstractUserController{
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);
         User user = repository.getExisted(id);
