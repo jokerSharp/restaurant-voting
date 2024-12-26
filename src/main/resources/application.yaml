@@ -7,6 +7,9 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
+    properties:
+      jakarta.persistence.validation.group.pre-persist: org.example.restaurantvoting.common.validation.View$Persist
+      jakarta.persistence.validation.group.pre-update: org.example.restaurantvoting.common.validation.View$Persist
   datasource:
     url: jdbc:h2:mem:restaurant_voting
     username: sa
