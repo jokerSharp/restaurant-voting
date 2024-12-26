@@ -1,5 +1,6 @@
 package org.example.restaurantvoting.user.repository;
 
+import org.example.restaurantvoting.common.BaseRepository;
 import org.example.restaurantvoting.common.exception.NotFoundException;
 import org.example.restaurantvoting.user.model.User;
 import org.springframework.data.jpa.repository.Query;
