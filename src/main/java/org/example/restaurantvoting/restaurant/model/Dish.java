@@ -33,7 +33,7 @@ public class Dish extends NamedEntity {
     @NotNull(groups = View.Persist.class)
     private Restaurant restaurant;
 
-    public Dish(int id, String name, long price, Restaurant restaurant) {
+    public Dish(Integer id, String name, long price, Restaurant restaurant) {
         super(id, name);
         this.price = price;
         this.restaurant = restaurant;

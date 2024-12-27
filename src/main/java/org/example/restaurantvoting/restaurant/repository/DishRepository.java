@@ -4,9 +4,11 @@ import org.example.restaurantvoting.common.BaseRepository;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
 
     List<Dish> findAllByRestaurantId(int restaurantId);
