@@ -8,6 +8,6 @@ import org.example.restaurantvoting.restaurant.to.RestaurantTo;
 public class RestaurantsUtil {
 
     public static RestaurantTo createToFromRestaurant(Restaurant restaurant) {
-        return new RestaurantTo(restaurant.getId(), restaurant.getName(), restaurant.getUsers());
+        return new RestaurantTo(restaurant.getId(), restaurant.getName(), restaurant.getVotes());
     }
 }

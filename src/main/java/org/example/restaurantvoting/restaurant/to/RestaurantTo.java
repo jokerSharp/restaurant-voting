@@ -3,7 +3,7 @@ package org.example.restaurantvoting.restaurant.to;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.example.restaurantvoting.common.to.NamedTo;
-import org.example.restaurantvoting.user.model.User;
+import org.example.restaurantvoting.restaurant.model.Vote;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class RestaurantTo extends NamedTo {
 
     int votes;
 
-    public RestaurantTo(Integer id, String name, List<User> votes) {
+    public RestaurantTo(Integer id, String name, List<Vote> votes) {
         super(id, name);
         this.votes = votes.size();
     }
