@@ -28,6 +28,6 @@ public class Restaurant extends NamedEntity {
     private List<Dish> dishes;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     private List<Vote> votes;
 }

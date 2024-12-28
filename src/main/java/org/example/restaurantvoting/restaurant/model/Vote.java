@@ -1,10 +1,12 @@
 package org.example.restaurantvoting.restaurant.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.restaurantvoting.common.model.BaseEntity;
 import org.example.restaurantvoting.user.model.User;
 
 import java.time.LocalDate;
@@ -16,28 +18,21 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Vote {
+public class Vote extends BaseEntity {
 
-    @EmbeddedId
-    private VoteId voteId;
-
-    @ManyToOne
-    @MapsId("restaurantId")
+    @ManyToOne()
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @ManyToOne
-    @MapsId("userId")
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
+    @NotNull
     @Temporal(TemporalType.DATE)
     private LocalDate createdAt;
 
-    private boolean isDeleted = false;
-
-    public Vote(VoteId voteId, Restaurant restaurant, User user) {
-        this.voteId = voteId;
+    public Vote(Restaurant restaurant, User user) {
         this.restaurant = restaurant;
         this.user = user;
         this.createdAt = LocalDate.now();

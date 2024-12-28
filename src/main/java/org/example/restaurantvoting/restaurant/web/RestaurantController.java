@@ -89,9 +89,7 @@ public class RestaurantController {
         if (currentDayVote.isEmpty()) {
             Restaurant restaurant = restaurantRepository.getExisted(id);
             voteService.save(restaurant, authUser.getUser());
-            return;
-        }
-        if (LocalTime.now().isBefore(LocalTime.of(11, 0))) {
+        } else if (LocalTime.now().isBefore(LocalTime.of(11, 0))) {
             voteService.reVote(id, authUser.id());
         }
     }
