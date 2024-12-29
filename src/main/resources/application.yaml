@@ -14,3 +14,5 @@ spring:
     url: jdbc:h2:mem:restaurant_voting
     username: sa
     password:
+
+springdoc.swagger-ui.path: /
