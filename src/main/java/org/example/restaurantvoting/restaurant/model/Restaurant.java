@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.restaurantvoting.common.model.NamedEntity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -25,9 +27,17 @@ public class Restaurant extends NamedEntity {
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
     @Schema(hidden = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
 
     @JsonIgnore
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Vote> votes;
+
+    public Restaurant(Integer id, String name, List<Dish> dishes, List<Vote> votes) {
+        super(id, name);
+        this.dishes = dishes;
+        this.votes = votes;
+    }
 }
