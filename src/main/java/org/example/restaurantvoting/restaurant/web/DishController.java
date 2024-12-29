@@ -2,6 +2,7 @@ package org.example.restaurantvoting.restaurant.web;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.example.restaurantvoting.common.exception.NotFoundException;
 import org.example.restaurantvoting.restaurant.DishUtil;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.repository.DishRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.example.restaurantvoting.common.validation.ValidationUtil.assureIdConsistent;
 import static org.example.restaurantvoting.common.validation.ValidationUtil.checkNew;
@@ -36,7 +38,8 @@ public class DishController {
     @GetMapping("/{id}")
     public DishTo get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("get dish with id={}", id);
-        return DishUtil.createToFromDish(repository.findOneByRestaurantId(restaurantId, id));
+        Optional<Dish> dish = repository.findOneByRestaurantId(restaurantId, id);
+        return DishUtil.createToFromDish(dish.orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found")));
     }
 
     @GetMapping
@@ -67,7 +70,7 @@ public class DishController {
     public void update(@PathVariable int restaurantId, @Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         log.info("update {} with id={}", dishTo, id);
         assureIdConsistent(dishTo, id);
-        Dish dish = DishUtil.createNewDishFromTo(dishTo);
+        Dish dish = DishUtil.createUpdatedDishFromTo(dishTo);
         dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
         repository.save(dish);
     }

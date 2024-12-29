@@ -15,8 +15,14 @@ public class DishUtil {
         return new Dish(null, dishTo.getName(), price, dishTo.getRestaurant());
     }
 
+    public static Dish createUpdatedDishFromTo(DishTo dishTo) {
+        long price = dishTo.getPrice().multiply(BigDecimal.valueOf(100)).longValue();
+        return new Dish(dishTo.getId(), dishTo.getName(), price, dishTo.getRestaurant());
+    }
+
     public static DishTo createToFromDish(Dish dish) {
-        BigDecimal price = BigDecimal.valueOf(dish.getPrice()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal price = BigDecimal.valueOf(dish.getPrice())
+                .divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
         return new DishTo(dish.getId(), dish.getName(), price, dish.getRestaurant());
     }
 }
