@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.restaurantvoting.common.model.NamedEntity;
 import org.example.restaurantvoting.common.validation.View;
+import org.hibernate.envers.Audited;
 
+@Audited
 @Entity
 @Table(name = "dish")
 @Getter

@@ -14,9 +14,12 @@ import lombok.Setter;
 import org.example.restaurantvoting.common.model.NamedEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.util.List;
 
+@Audited
 @Entity
 @Table(name = "restaurant")
 @Getter
@@ -30,6 +33,7 @@ public class Restaurant extends NamedEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
 
+    @NotAudited
     @JsonIgnore
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
