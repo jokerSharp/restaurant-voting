@@ -1,7 +1,10 @@
 package org.example.restaurantvoting.user.web;
 
 import jakarta.validation.Valid;
+import org.example.restaurantvoting.restaurant.model.Restaurant;
+import org.example.restaurantvoting.restaurant.service.AuditService;
 import org.example.restaurantvoting.user.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +24,9 @@ import static org.example.restaurantvoting.common.validation.ValidationUtil.chec
 public class AdminUserController extends AbstractUserController{
 
     static final String REST_URL = "/api/admin/users";
+
+    @Autowired
+    private AuditService auditService;
 
     @Override
     @GetMapping("/{id}")
@@ -73,5 +79,10 @@ public class AdminUserController extends AbstractUserController{
         log.info(enabled ? "enable {}" : "disable {}", id);
         User user = repository.getExisted(id);
         user.setEnabled(enabled);
+    }
+
+    @GetMapping("/{id}/previous-version")
+    public User getPreviousVersion(@PathVariable int id) {
+        return auditService.getPreviousEntityVersion(id, User.class);
     }
 }
