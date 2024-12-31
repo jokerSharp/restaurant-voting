@@ -7,7 +7,7 @@ import org.example.restaurantvoting.restaurant.RestaurantsUtil;
 import org.example.restaurantvoting.restaurant.model.Restaurant;
 import org.example.restaurantvoting.restaurant.model.Vote;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
-import org.example.restaurantvoting.restaurant.service.RestaurantAuditService;
+import org.example.restaurantvoting.restaurant.service.AuditService;
 import org.example.restaurantvoting.restaurant.service.VoteService;
 import org.example.restaurantvoting.restaurant.to.RestaurantTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class RestaurantController {
     private RestaurantRepository restaurantRepository;
 
     @Autowired
-    private RestaurantAuditService restaurantAuditService;
+    private AuditService auditService;
 
     @Autowired
     private VoteService voteService;
@@ -99,7 +99,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}/previous-version")
-    public Restaurant getSingleHistory(@PathVariable int id) {
-        return restaurantAuditService.getPreviousRestaurantVersion(id);
+    public Restaurant getPreviousVersion(@PathVariable int id) {
+        return auditService.getPreviousEntityVersion(id, Restaurant.class);
     }
 }

@@ -13,10 +13,12 @@ import lombok.Setter;
 import org.example.restaurantvoting.common.HasIdAndEmail;
 import org.example.restaurantvoting.common.model.NamedEntity;
 import org.example.restaurantvoting.common.validation.NoHtml;
+import org.hibernate.envers.Audited;
 import org.springframework.lang.NonNull;
 
 import java.util.*;
 
+@Audited
 @Entity
 @Table(name = "users")
 @Getter

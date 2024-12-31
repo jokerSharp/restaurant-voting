@@ -7,6 +7,7 @@ import org.example.restaurantvoting.restaurant.DishUtil;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.repository.DishRepository;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
+import org.example.restaurantvoting.restaurant.service.AuditService;
 import org.example.restaurantvoting.restaurant.to.DishTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,20 +33,24 @@ public class DishController {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
     @Autowired
-    private DishRepository repository;
+    private DishRepository dishRepository;
+
+    @Autowired
+    private AuditService auditService;
 
     @GetMapping("/{id}")
     public DishTo get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("get dish with id={}", id);
-        Optional<Dish> dish = repository.findOneByRestaurantId(restaurantId, id);
+        Optional<Dish> dish = dishRepository.findOneByRestaurantId(restaurantId, id);
         return DishUtil.createToFromDish(dish.orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found")));
     }
 
     @GetMapping
     public List<DishTo> getAll(@PathVariable int restaurantId) {
         log.info("get all dishes for the restaurant id={}", restaurantId);
-        return repository.findAllByRestaurantId(restaurantId).stream().map(DishUtil::createToFromDish).toList();
+        return dishRepository.findAllByRestaurantId(restaurantId).stream().map(DishUtil::createToFromDish).toList();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -54,7 +59,7 @@ public class DishController {
         checkNew(dishTo);
         Dish dish = DishUtil.createNewDishFromTo(dishTo);
         dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
-        Integer createdId = repository.save(dish).getId();
+        Integer createdId = dishRepository.save(dish).getId();
         dishTo.setId(createdId);
         URI uriOfNewResource = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -72,13 +77,18 @@ public class DishController {
         assureIdConsistent(dishTo, id);
         Dish dish = DishUtil.createUpdatedDishFromTo(dishTo);
         dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
-        repository.save(dish);
+        dishRepository.save(dish);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("delete {}", id);
-        repository.deleteExisted(id);
+        dishRepository.deleteExisted(id);
+    }
+
+    @GetMapping("/{id}/previous-version")
+    public DishTo getPreviousVersion(@PathVariable String restaurantId, @PathVariable int id) {
+        return DishUtil.createToFromDish(auditService.getPreviousEntityVersion(id, Dish.class));
     }
 }
