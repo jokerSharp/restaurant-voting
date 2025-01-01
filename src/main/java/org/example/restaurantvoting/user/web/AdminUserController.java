@@ -1,8 +1,7 @@
 package org.example.restaurantvoting.user.web;
 
 import jakarta.validation.Valid;
-import org.example.restaurantvoting.restaurant.model.Restaurant;
-import org.example.restaurantvoting.restaurant.service.AuditService;
+import org.example.restaurantvoting.common.service.AuditService;
 import org.example.restaurantvoting.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

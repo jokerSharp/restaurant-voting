@@ -7,7 +7,7 @@ import org.example.restaurantvoting.restaurant.DishUtil;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.repository.DishRepository;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
-import org.example.restaurantvoting.restaurant.service.AuditService;
+import org.example.restaurantvoting.common.service.AuditService;
 import org.example.restaurantvoting.restaurant.to.DishTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

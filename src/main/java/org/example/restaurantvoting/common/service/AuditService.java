@@ -1,4 +1,4 @@
-package org.example.restaurantvoting.restaurant.service;
+package org.example.restaurantvoting.common.service;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.example.restaurantvoting.common.exception.AppException;
