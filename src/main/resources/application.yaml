@@ -1,5 +1,3 @@
-server:
-  port: 8088
 spring:
   jpa:
     show-sql: true
@@ -7,7 +5,22 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
+    properties:
+      jakarta.persistence.validation.group.pre-persist: org.example.restaurantvoting.common.validation.View$Persist
+      jakarta.persistence.validation.group.pre-update: org.example.restaurantvoting.common.validation.View$Persist
   datasource:
     url: jdbc:h2:mem:restaurant_voting
     username: sa
     password:
+  cache:
+    cache-names: users, restaurants
+    caffeine.spec: maximumSize=5000,expireAfterAccess=60s
+
+logging:
+  level:
+    root: WARN
+    org.example.restaurantvoting: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
+    org.springframework.cache: TRACE
+
+springdoc.swagger-ui.path: /

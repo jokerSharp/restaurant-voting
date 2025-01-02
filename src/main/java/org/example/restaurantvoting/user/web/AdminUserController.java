@@ -1,7 +1,11 @@
 package org.example.restaurantvoting.user.web;
 
 import jakarta.validation.Valid;
+import org.example.restaurantvoting.common.service.AuditService;
 import org.example.restaurantvoting.user.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,12 +26,17 @@ public class AdminUserController extends AbstractUserController{
 
     static final String REST_URL = "/api/admin/users";
 
+    @Autowired
+    private AuditService auditService;
+
+    @Cacheable("users")
     @Override
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         return super.get(id);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -41,6 +50,7 @@ public class AdminUserController extends AbstractUserController{
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
         log.info("create {}", user);
@@ -52,6 +62,7 @@ public class AdminUserController extends AbstractUserController{
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
@@ -60,12 +71,14 @@ public class AdminUserController extends AbstractUserController{
         repository.prepareAndSave(user);
     }
 
+    @Cacheable("users")
     @GetMapping("/by-email")
     public User getByEmail(@RequestParam String email) {
         log.info("getByEmail {}", email);
         return repository.getExistedByEmail(email);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
@@ -73,5 +86,11 @@ public class AdminUserController extends AbstractUserController{
         log.info(enabled ? "enable {}" : "disable {}", id);
         User user = repository.getExisted(id);
         user.setEnabled(enabled);
+    }
+
+    @Cacheable("users")
+    @GetMapping("/{id}/previous-version")
+    public User getPreviousVersion(@PathVariable int id) {
+        return auditService.getPreviousEntityVersion(id, User.class);
     }
 }
