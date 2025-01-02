@@ -6,6 +6,8 @@ import org.example.restaurantvoting.app.AuthUser;
 import org.example.restaurantvoting.user.UsersUtil;
 import org.example.restaurantvoting.user.model.User;
 import org.example.restaurantvoting.user.to.UserTo;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +28,21 @@ public class ProfileController extends AbstractUserController {
 
     static final String REST_URL = "/api/profile";
 
+    @Cacheable("users")
     @GetMapping
     public User get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get {}", authUser);
         return authUser.getUser();
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         super.delete(authUser.id());
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
@@ -49,6 +54,7 @@ public class ProfileController extends AbstractUserController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
