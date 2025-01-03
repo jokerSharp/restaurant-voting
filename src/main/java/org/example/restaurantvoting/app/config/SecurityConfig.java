@@ -28,6 +28,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Slf4j
 @AllArgsConstructor
 public class SecurityConfig {
+
+    private static final String RESTAURANT_PATH = "/api/restaurants/**";
+
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private final UserRepository userRepository;
@@ -51,9 +54,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").authorizeHttpRequests(authz ->
                         authz.requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.PATCH,"/api/restaurants/**").hasRole(Role.USER.name())
-                                .requestMatchers(HttpMethod.GET,"/api/restaurants/**").hasRole(Role.USER.name())
-                                .requestMatchers("/api/restaurants/**").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PATCH, RESTAURANT_PATH).hasRole(Role.USER.name())
+                                .requestMatchers(HttpMethod.GET, RESTAURANT_PATH).hasRole(Role.USER.name())
+                                .requestMatchers(RESTAURANT_PATH).hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
                                 .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/**").authenticated())
