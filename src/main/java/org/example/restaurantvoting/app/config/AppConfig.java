@@ -3,7 +3,7 @@ package org.example.restaurantvoting.app.config;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import lombok.extern.slf4j.Slf4j;
 import org.example.restaurantvoting.common.util.JsonUtil;
 import org.h2.tools.Server;
@@ -40,7 +40,7 @@ public class AppConfig {
 
     @Autowired
     void configureAndStoreObjectMapper(ObjectMapper objectMapper) {
-        objectMapper.registerModule(new Hibernate5JakartaModule());
+        objectMapper.registerModule(new Hibernate6Module());
         objectMapper.addMixIn(ProblemDetail.class, MixIn.class);
         JsonUtil.setMapper(objectMapper);
     }
