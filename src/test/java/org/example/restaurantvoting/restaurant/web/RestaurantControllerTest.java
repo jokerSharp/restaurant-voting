@@ -34,6 +34,10 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = REST_URL + '/';
 
+    private static final String REST_URL_RESTAURANT_1_ID = REST_URL_SLASH + RESTAURANT_1_ID;
+
+    private static final String REST_URL_RESTAURANT_1_ID_VOTE = REST_URL_RESTAURANT_1_ID + "/vote";
+
     @Autowired
     private RestaurantRepository repository;
 
@@ -46,7 +50,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT_1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL_RESTAURANT_1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -108,7 +112,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void update() throws Exception {
         Restaurant updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL_RESTAURANT_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -121,7 +125,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     void updateInvalid() throws Exception {
         Restaurant updated = getUpdated();
         updated.setName("");
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL_RESTAURANT_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isUnprocessableEntity());
@@ -130,7 +134,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT_1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL_RESTAURANT_1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(repository.findById(RESTAURANT_1_ID).isPresent());
@@ -147,7 +151,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void vote() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + RESTAURANT_1_ID + "/vote"))
+        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
                 .andExpect(status().isNoContent());
         assertEquals(RESTAURANT_1_ID, voteRepository.getExisted(2).getRestaurant().getId());
     }
@@ -158,7 +162,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         //instant is parsed from UTC string so 07 in UTC will be 10 in UTC+3
         when(clock.instant()).thenReturn(Instant.parse("2025-01-05T07:00:00Z"));
 
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + RESTAURANT_1_ID + "/vote"))
+        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
                 .andExpect(status().isNoContent());
     }
 
@@ -168,7 +172,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         //instant is parsed from UTC string so 08 in UTC will be 11 in UTC+3
         when(clock.instant()).thenReturn(Instant.parse("2025-01-05T08:00:00Z"));
 
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + RESTAURANT_1_ID + "/vote"))
+        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -183,7 +187,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.JUST_ADMIN_MAIL)
     void voteForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + RESTAURANT_1_ID + "/vote"))
+        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
