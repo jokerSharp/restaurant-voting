@@ -57,9 +57,9 @@ public class RestaurantController {
 
     @Cacheable("restaurants")
     @GetMapping("/{id}")
-    public Restaurant get(@PathVariable int id) {
+    public RestaurantTo get(@PathVariable int id) {
         log.info("get restaurant with id={}", id);
-        return restaurantRepository.getExisted(id);
+        return RestaurantsUtil.createToFromRestaurant(restaurantRepository.getExisted(id));
     }
 
     @GetMapping
