@@ -1,10 +1,10 @@
-package org.example.restaurantvoting.restaurant.service;
+package org.example.restaurantvoting.user.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.restaurantvoting.restaurant.model.Restaurant;
-import org.example.restaurantvoting.restaurant.model.Vote;
-import org.example.restaurantvoting.restaurant.repository.VoteRepository;
+import org.example.restaurantvoting.user.model.Vote;
+import org.example.restaurantvoting.user.repository.VoteRepository;
 import org.example.restaurantvoting.user.model.User;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

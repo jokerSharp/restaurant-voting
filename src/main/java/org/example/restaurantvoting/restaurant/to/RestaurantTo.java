@@ -3,7 +3,7 @@ package org.example.restaurantvoting.restaurant.to;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.example.restaurantvoting.common.to.NamedTo;
-import org.example.restaurantvoting.restaurant.model.Vote;
+import org.example.restaurantvoting.user.model.Vote;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package org.example.restaurantvoting.restaurant.repository;
+package org.example.restaurantvoting.user.repository;
 
 import org.example.restaurantvoting.common.BaseRepository;
-import org.example.restaurantvoting.restaurant.model.Vote;
+import org.example.restaurantvoting.user.model.Vote;
 import org.example.restaurantvoting.user.model.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
