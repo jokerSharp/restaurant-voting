@@ -54,7 +54,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").authorizeHttpRequests(authz ->
                         authz.requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers(HttpMethod.PATCH, RESTAURANT_PATH).hasRole(Role.USER.name())
+                                .requestMatchers("/api/user/**").hasRole(Role.USER.name())
                                 .requestMatchers(HttpMethod.GET, RESTAURANT_PATH).hasRole(Role.USER.name())
                                 .requestMatchers(RESTAURANT_PATH).hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()

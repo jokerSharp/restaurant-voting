@@ -1,4 +1,4 @@
-package org.example.restaurantvoting.restaurant.model;
+package org.example.restaurantvoting.user.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.restaurantvoting.common.model.BaseEntity;
-import org.example.restaurantvoting.user.model.User;
+import org.example.restaurantvoting.restaurant.model.Restaurant;
 
 import java.time.LocalDate;
 
