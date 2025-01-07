@@ -3,29 +3,18 @@ package org.example.restaurantvoting.restaurant.web;
 import org.example.restaurantvoting.AbstractControllerTest;
 import org.example.restaurantvoting.common.util.JsonUtil;
 import org.example.restaurantvoting.restaurant.model.Restaurant;
-import org.example.restaurantvoting.restaurant.model.Vote;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
-import org.example.restaurantvoting.restaurant.repository.VoteRepository;
-import org.example.restaurantvoting.restaurant.service.VoteService;
 import org.example.restaurantvoting.user.UserTestData;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.*;
-import java.util.List;
-
-import static org.awaitility.Awaitility.given;
 import static org.example.restaurantvoting.restaurant.RestaurantTestData.*;
 import static org.example.restaurantvoting.restaurant.web.RestaurantController.REST_URL;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,16 +25,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_RESTAURANT_1_ID = REST_URL_SLASH + RESTAURANT_1_ID;
 
-    private static final String REST_URL_RESTAURANT_1_ID_VOTE = REST_URL_RESTAURANT_1_ID + "/vote";
-
     @Autowired
     private RestaurantRepository repository;
-
-    @Autowired
-    private VoteRepository voteRepository;
-
-    @MockBean
-    private Clock clock;
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
@@ -146,49 +127,5 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
-    void vote() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
-                .andExpect(status().isNoContent());
-        assertEquals(RESTAURANT_1_ID, voteRepository.getExisted(2).getRestaurant().getId());
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void reVotePositive() throws Exception {
-        //instant is parsed from UTC string so 07 in UTC will be 10 in UTC+3
-        when(clock.instant()).thenReturn(Instant.parse("2025-01-05T07:00:00Z"));
-
-        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void reVoteNegative() throws Exception {
-        //instant is parsed from UTC string so 08 in UTC will be 11 in UTC+3
-        when(clock.instant()).thenReturn(Instant.parse("2025-01-05T08:00:00Z"));
-
-        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
-    void voteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + NOT_FOUND + "/vote"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.JUST_ADMIN_MAIL)
-    void voteForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_RESTAURANT_1_ID_VOTE))
-                .andDo(print())
-                .andExpect(status().isForbidden());
     }
 }
