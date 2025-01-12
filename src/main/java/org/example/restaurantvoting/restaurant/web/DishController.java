@@ -3,7 +3,6 @@ package org.example.restaurantvoting.restaurant.web;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.restaurantvoting.common.exception.NotFoundException;
-import org.example.restaurantvoting.common.service.AuditService;
 import org.example.restaurantvoting.restaurant.DishesUtil;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.repository.DishRepository;
@@ -36,9 +35,6 @@ public class DishController {
 
     @Autowired
     private DishRepository dishRepository;
-
-    @Autowired
-    private AuditService auditService;
 
     @GetMapping("/{id}")
     public DishTo get(@PathVariable int restaurantId, @PathVariable int id) {
@@ -85,10 +81,5 @@ public class DishController {
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("delete {}", id);
         dishRepository.deleteExisted(id);
-    }
-
-    @GetMapping("/{id}/previous-version")
-    public DishTo getPreviousVersion(@PathVariable String restaurantId, @PathVariable int id) {
-        return DishesUtil.createToFromDish(auditService.getPreviousEntityVersion(id, Dish.class));
     }
 }

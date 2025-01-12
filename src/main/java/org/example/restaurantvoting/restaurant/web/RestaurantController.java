@@ -2,7 +2,6 @@ package org.example.restaurantvoting.restaurant.web;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.restaurantvoting.common.service.AuditService;
 import org.example.restaurantvoting.restaurant.RestaurantsUtil;
 import org.example.restaurantvoting.restaurant.model.Restaurant;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
@@ -32,9 +31,6 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
-
-    @Autowired
-    private AuditService auditService;
 
     @Cacheable("restaurants")
     @GetMapping("/{id}")
@@ -88,11 +84,5 @@ public class RestaurantController {
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         restaurantRepository.deleteExisted(id);
-    }
-
-    @Cacheable("restaurants")
-    @GetMapping("/{id}/previous-version")
-    public Restaurant getPreviousVersion(@PathVariable int id) {
-        return auditService.getPreviousEntityVersion(id, Restaurant.class);
     }
 }

@@ -1,7 +1,6 @@
 package org.example.restaurantvoting.restaurant.service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.restaurantvoting.common.exception.AppException;
 import org.example.restaurantvoting.restaurant.model.Restaurant;
 import org.example.restaurantvoting.restaurant.model.Vote;
@@ -21,10 +20,9 @@ import static org.example.restaurantvoting.common.exception.ErrorType.BAD_DATA;
 
 @Service
 @AllArgsConstructor
-@Slf4j
 public class VoteService {
 
-    private static final LocalTime VOTE_END_TIME = LocalTime.of(11, 0);
+    private static final LocalTime VOTE_END_TIME = LocalTime.of(21, 0);
 
     private final VoteRepository voteRepository;
 
@@ -51,6 +49,7 @@ public class VoteService {
 
     @Transactional
     public void processVote(int restaurantId, User user) {
+        //todo check date of the vote
         Optional<Vote> currentDayVote = findCurrentDayVote(user);
         if (currentDayVote.isEmpty()) {
             Restaurant restaurant = restaurantRepository.getExisted(restaurantId);

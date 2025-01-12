@@ -4,6 +4,9 @@ import org.example.restaurantvoting.MatcherFactory;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.to.DishTo;
 
+import java.time.LocalDate;
+import java.time.Month;
+
 public class DishTestData {
 
     public static final MatcherFactory.Matcher<Dish> DISH_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Dish.class, "restaurant");
@@ -13,13 +16,13 @@ public class DishTestData {
     public static final int MEATBALLS_ID = 2;
     public static final int NOT_FOUND = 100;
 
-    public static final Dish burger = new Dish(BURGER_ID, "Burger", 9999, null);
+    public static final Dish burger = new Dish(BURGER_ID, "Burger", 9999, LocalDate.of(2025, Month.JANUARY, 10));
     public static final DishTo burgerTo = DishesUtil.createToFromDish(burger);
-    public static final Dish meatballs = new Dish(MEATBALLS_ID, "Meatballs", 19900, null);
+    public static final Dish meatballs = new Dish(MEATBALLS_ID, "Meatballs", 19900, LocalDate.now());
     public static final DishTo meatballsTo = DishesUtil.createToFromDish(meatballs);
 
     public static Dish getNew() {
-        return new Dish(null, "french fries", 1234, null);
+        return new Dish(null, "french fries", 1234, LocalDate.now());
     }
 
     public static DishTo getNewTo() {
@@ -27,7 +30,7 @@ public class DishTestData {
     }
 
     public static Dish getUpdated() {
-        return new Dish(BURGER_ID, "UpdatedName", 34560, null);
+        return new Dish(BURGER_ID, "UpdatedName", 34560, LocalDate.now());
     }
 
     public static DishTo getUpdatedTo() {
