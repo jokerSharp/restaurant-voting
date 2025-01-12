@@ -14,11 +14,11 @@ INSERT INTO RESTAURANT (name)
 VALUES ('Mirazur'),
        ('Geranium');
 
-INSERT INTO DISH (name, price, restaurant_id)
-VALUES ('Burger', 9999, 1),
-       ('Meatballs', 19900, 1),
-       ('Pasta', 30050, 2),
-       ('Pizza', 50000, 2);
+INSERT INTO DISH (name, price, restaurant_id, actuality_date)
+VALUES ('Burger', 9999, 1, DATE '2025-01-10'),
+       ('Meatballs', 19900, 1, CURRENT_DATE),
+       ('Pasta', 30050, 2, DATE '2025-01-10'),
+       ('Pizza', 50000, 2, CURRENT_DATE);
 
 INSERT INTO VOTE (restaurant_id, user_id, created_at)
 VALUES (1, 2, DATE '2025-01-10'),

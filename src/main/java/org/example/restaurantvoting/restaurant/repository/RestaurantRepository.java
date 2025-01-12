@@ -10,6 +10,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
-    @Query("select r from Restaurant r left join fetch r.dishes d")
+    @Query("select r from Restaurant r left join fetch r.dishes d where d.actualityDate=current_date")
     List<Restaurant> findWithDishes();
 }

@@ -5,7 +5,7 @@ import org.example.restaurantvoting.restaurant.model.Restaurant;
 
 public class RestaurantTestData {
 
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "dishes");
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "dishes", "votes");
 
     public static final int RESTAURANT_1_ID = 1;
     public static final int RESTAURANT_2_ID = 2;
