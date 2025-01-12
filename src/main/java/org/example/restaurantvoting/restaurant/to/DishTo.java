@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 public class DishTo extends NamedTo {
 
+    @NotNull
     BigDecimal price;
 
     @Schema(hidden = true)

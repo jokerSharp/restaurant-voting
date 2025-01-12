@@ -20,5 +20,6 @@ VALUES ('Burger', 9999, 1),
        ('Pasta', 30050, 2),
        ('Pizza', 50000, 2);
 
-INSERT INTO RESTAURANT_USER (restaurant_id, user_id, created_at)
-VALUES (2, 2, CURRENT_DATE);
+INSERT INTO VOTE (restaurant_id, user_id, created_at)
+VALUES (1, 2, DATE '2025-01-10'),
+       (2, 2, CURRENT_DATE);
