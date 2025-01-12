@@ -1,9 +1,7 @@
 package org.example.restaurantvoting.user.web;
 
 import jakarta.validation.Valid;
-import org.example.restaurantvoting.common.service.AuditService;
 import org.example.restaurantvoting.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -22,12 +20,9 @@ import static org.example.restaurantvoting.common.validation.ValidationUtil.chec
 
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class AdminUserController extends AbstractUserController{
+public class AdminUserController extends AbstractUserController {
 
     static final String REST_URL = "/api/admin/users";
-
-    @Autowired
-    private AuditService auditService;
 
     @Cacheable("users")
     @Override
@@ -86,11 +81,5 @@ public class AdminUserController extends AbstractUserController{
         log.info(enabled ? "enable {}" : "disable {}", id);
         User user = repository.getExisted(id);
         user.setEnabled(enabled);
-    }
-
-    @Cacheable("users")
-    @GetMapping("/{id}/previous-version")
-    public User getPreviousVersion(@PathVariable int id) {
-        return auditService.getPreviousEntityVersion(id, User.class);
     }
 }

@@ -64,12 +64,6 @@
             <artifactId>jackson-datatype-hibernate6</artifactId>
         </dependency>
 
-        <!--audit-->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-envers</artifactId>
-        </dependency>
-
         <!--data base-->
         <dependency>
             <groupId>com.h2database</groupId>

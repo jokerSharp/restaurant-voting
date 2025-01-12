@@ -1,7 +1,6 @@
 package org.example.restaurantvoting.user.web;
 
 import org.example.restaurantvoting.AbstractControllerTest;
-import org.example.restaurantvoting.MatcherFactory;
 import org.example.restaurantvoting.common.util.JsonUtil;
 import org.example.restaurantvoting.restaurant.RestaurantTestData;
 import org.example.restaurantvoting.restaurant.repository.VoteRepository;
@@ -14,14 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.*;
 
 import static org.example.restaurantvoting.restaurant.RestaurantTestData.RESTAURANT_1_ID;
-import static org.example.restaurantvoting.restaurant.RestaurantTestData.RESTAURANT_2_ID;
 import static org.example.restaurantvoting.user.VoteTestData.*;
 import static org.example.restaurantvoting.user.web.UserVoteController.REST_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +42,7 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
-                .andExpect(VOTE_MATCHER.contentJson(vote1, vote2));
+                .andExpect(VOTE_TO_MATCHER.contentJson(vote1, vote2));
     }
 
     @Test

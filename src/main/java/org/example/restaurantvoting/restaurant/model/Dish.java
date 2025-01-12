@@ -11,9 +11,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.example.restaurantvoting.common.model.NamedEntity;
 import org.example.restaurantvoting.common.validation.View;
-import org.hibernate.envers.Audited;
 
-@Audited
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "dish")
 @Getter
@@ -25,6 +25,9 @@ public class Dish extends NamedEntity {
     @PositiveOrZero
     private long price;
 
+    @NotNull
+    private LocalDate actualityDate;
+
     @Schema(hidden = true)
     @JsonBackReference
     @ManyToOne
@@ -32,14 +35,9 @@ public class Dish extends NamedEntity {
     @NotNull(groups = View.Persist.class)
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, long price) {
+    public Dish(Integer id, String name, long price, LocalDate actualityDate) {
         super(id, name);
         this.price = price;
-    }
-
-    public Dish(Integer id, String name, long price, Restaurant restaurant) {
-        super(id, name);
-        this.price = price;
-        this.restaurant = restaurant;
+        this.actualityDate = actualityDate;
     }
 }

@@ -11,11 +11,11 @@ import java.math.RoundingMode;
 public class DishesUtil {
 
     public static Dish createDishFromTo(DishTo dishTo) {
-        return new Dish(dishTo.getId(), dishTo.getName(), getDishPrice(dishTo.getPrice()));
+        return new Dish(dishTo.getId(), dishTo.getName(), getDishPrice(dishTo.getPrice()), dishTo.getActualityDate());
     }
 
     public static DishTo createToFromDish(Dish dish) {
-        return new DishTo(dish.getId(), dish.getName(), getDishToPrice(dish.getPrice()), dish.getRestaurant());
+        return new DishTo(dish.getId(), dish.getName(), getDishToPrice(dish.getPrice()), dish.getActualityDate());
     }
 
     private static long getDishPrice(BigDecimal decimalPrice) {

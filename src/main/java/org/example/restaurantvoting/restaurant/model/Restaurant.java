@@ -13,12 +13,9 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import java.util.List;
 
-@Audited
 @Entity
 @Table(name = "restaurant",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "uk_name")})
@@ -35,7 +32,6 @@ public class Restaurant extends NamedEntity {
     @Fetch(FetchMode.SUBSELECT)
     private List<Dish> dishes;
 
-    @NotAudited
     @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
