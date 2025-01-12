@@ -14,16 +14,16 @@ public class DishTestData {
     public static final int NOT_FOUND = 100;
 
     public static final Dish burger = new Dish(BURGER_ID, "Burger", 9999, null);
-    public static final DishTo burgerTo = DishUtil.createToFromDish(burger);
+    public static final DishTo burgerTo = DishesUtil.createToFromDish(burger);
     public static final Dish meatballs = new Dish(MEATBALLS_ID, "Meatballs", 19900, null);
-    public static final DishTo meatballsTo = DishUtil.createToFromDish(meatballs);
+    public static final DishTo meatballsTo = DishesUtil.createToFromDish(meatballs);
 
     public static Dish getNew() {
         return new Dish(null, "french fries", 1234, null);
     }
 
     public static DishTo getNewTo() {
-        return DishUtil.createToFromDish(getNew());
+        return DishesUtil.createToFromDish(getNew());
     }
 
     public static Dish getUpdated() {
@@ -31,18 +31,18 @@ public class DishTestData {
     }
 
     public static DishTo getUpdatedTo() {
-        return DishUtil.createToFromDish(getUpdated());
+        return DishesUtil.createToFromDish(getUpdated());
     }
 
     public static DishTo getNewInvalidTo() {
         Dish dish = getNew();
         dish.setPrice(-1);
-        return DishUtil.createToFromDish(dish);
+        return DishesUtil.createToFromDish(dish);
     }
 
     public static DishTo getUpdatedInvalidTo() {
         Dish dish = getUpdated();
         dish.setName("");
-        return DishUtil.createToFromDish(dish);
+        return DishesUtil.createToFromDish(dish);
     }
 }

@@ -51,6 +51,14 @@ public class RestaurantController {
                 .toList();
     }
 
+    @GetMapping("with-dishes")
+    public List<RestaurantTo> getAllWithDishes() {
+        log.info("get all restaurants with dishes");
+        return restaurantRepository.findWithDishes().stream()
+                .map(RestaurantsUtil::createToWithDishesFromRestaurant)
+                .toList();
+    }
+
     @CacheEvict(value = "restaurants", allEntries = true)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {

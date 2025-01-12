@@ -1,35 +1,33 @@
-package org.example.restaurantvoting.user.model;
+package org.example.restaurantvoting.restaurant.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.restaurantvoting.common.model.BaseEntity;
-import org.example.restaurantvoting.restaurant.model.Restaurant;
+import org.example.restaurantvoting.user.model.User;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "restaurant_user",
-        uniqueConstraints =
-                {@UniqueConstraint(columnNames = {"user_id", "created_at"}, name = "uk_user_date")})
+@Table(name = "vote",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "created_at"}, name = "uk_user_date")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(callSuper = true, exclude = {"restaurant", "user"})
 public class Vote extends BaseEntity {
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
+    @NotNull
     private Restaurant restaurant;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @NotNull
-    @Temporal(TemporalType.DATE)
     private LocalDate createdAt;
 
     public Vote(Restaurant restaurant, User user) {

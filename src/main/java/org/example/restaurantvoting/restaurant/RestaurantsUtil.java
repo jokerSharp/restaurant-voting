@@ -8,6 +8,11 @@ import org.example.restaurantvoting.restaurant.to.RestaurantTo;
 public class RestaurantsUtil {
 
     public static RestaurantTo createToFromRestaurant(Restaurant restaurant) {
-        return new RestaurantTo(restaurant.getId(), restaurant.getName(), restaurant.getVotes());
+        return new RestaurantTo(restaurant.getId(), restaurant.getName());
+    }
+
+    public static RestaurantTo createToWithDishesFromRestaurant(Restaurant restaurant) {
+        return new RestaurantTo(restaurant.getId(), restaurant.getName(),
+                restaurant.getDishes().stream().map(DishesUtil::createToFromDish).toList());
     }
 }
