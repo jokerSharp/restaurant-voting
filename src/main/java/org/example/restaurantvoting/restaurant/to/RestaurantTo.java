@@ -1,20 +1,26 @@
 package org.example.restaurantvoting.restaurant.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.example.restaurantvoting.common.to.NamedTo;
-import org.example.restaurantvoting.user.model.Vote;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class RestaurantTo extends NamedTo {
 
-    int votes;
+    List<DishTo> dishes;
 
-    public RestaurantTo(Integer id, String name, List<Vote> votes) {
+    public RestaurantTo(Integer id, String name) {
         super(id, name);
-        this.votes = votes.size();
+        dishes = null;
+    }
+
+    public RestaurantTo(Integer id, String name, List<DishTo> dishes) {
+        super(id, name);
+        this.dishes = dishes;
     }
 }

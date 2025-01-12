@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.restaurantvoting.common.HasId;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
+
+import static org.example.restaurantvoting.common.util.HibernateProxyHelper.getClassWithoutInitializingProxy;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
@@ -33,19 +34,14 @@ public abstract class BaseEntity implements Persistable<Integer>, HasId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
-            return false;
-        }
-        BaseEntity that = (BaseEntity) o;
-        return id != null && id.equals(that.id);
+        if (this == o) return true;
+        if (o == null || getClassWithoutInitializingProxy(this) != getClassWithoutInitializingProxy(o)) return false;
+        return getId() != null && getId().equals(((BaseEntity) o).getId());
     }
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id;
+        return getClassWithoutInitializingProxy(this).hashCode();
     }
 
     @Override
