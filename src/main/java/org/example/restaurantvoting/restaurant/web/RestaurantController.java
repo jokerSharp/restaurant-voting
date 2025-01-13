@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +32,14 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private UniqueRestaurantNameValidator uniqueRestaurantNameValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(uniqueRestaurantNameValidator);
+    }
 
     @Cacheable("restaurants")
     @GetMapping("/{id}")

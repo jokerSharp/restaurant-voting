@@ -5,6 +5,9 @@ import org.example.restaurantvoting.common.util.JsonUtil;
 import org.example.restaurantvoting.restaurant.model.Restaurant;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
 import org.example.restaurantvoting.user.UserTestData;
+import org.example.restaurantvoting.user.to.UserTo;
+import org.example.restaurantvoting.user.web.ProfileController;
+import org.example.restaurantvoting.user.web.UniqueMailValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +17,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.example.restaurantvoting.restaurant.RestaurantTestData.*;
 import static org.example.restaurantvoting.restaurant.web.RestaurantController.REST_URL;
+import static org.example.restaurantvoting.user.UserTestData.ADMIN_MAIL;
+import static org.example.restaurantvoting.user.UserTestData.USER_MAIL;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -127,5 +133,25 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void createDuplicateName() throws Exception {
+        Restaurant duplicate = new Restaurant(null, RESTAURANT_1_NAME, null, null);
+        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(duplicate)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(UniqueRestaurantNameValidator.EXCEPTION_DUPLICATE_NAME)));
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void updateDuplicateName() throws Exception {
+        Restaurant duplicate = new Restaurant(2, RESTAURANT_1_NAME, null, null);
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_2_ID).contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(duplicate)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(UniqueRestaurantNameValidator.EXCEPTION_DUPLICATE_NAME)));
     }
 }
