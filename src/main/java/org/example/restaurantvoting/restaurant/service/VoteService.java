@@ -6,6 +6,7 @@ import org.example.restaurantvoting.restaurant.model.Restaurant;
 import org.example.restaurantvoting.restaurant.model.Vote;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
 import org.example.restaurantvoting.restaurant.repository.VoteRepository;
+import org.example.restaurantvoting.restaurant.to.VoteTo;
 import org.example.restaurantvoting.user.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ import static org.example.restaurantvoting.common.exception.ErrorType.BAD_DATA;
 @AllArgsConstructor
 public class VoteService {
 
-    private static final LocalTime VOTE_END_TIME = LocalTime.of(21, 0);
+    private static final LocalTime VOTE_END_TIME = LocalTime.of(11, 0);
 
     private final VoteRepository voteRepository;
 
@@ -48,8 +49,12 @@ public class VoteService {
     }
 
     @Transactional
-    public void processVote(int restaurantId, User user) {
-        //todo check date of the vote
+    public void processVote(VoteTo voteTo, User user) {
+        LocalDate voteDate = voteTo.getVoteDate();
+        if (!voteDate.isEqual(LocalDate.now(clock))) {
+            throw new AppException("You cannot change another day vote", BAD_DATA);
+        }
+        int restaurantId = voteTo.getRestaurantId();
         Optional<Vote> currentDayVote = findCurrentDayVote(user);
         if (currentDayVote.isEmpty()) {
             Restaurant restaurant = restaurantRepository.getExisted(restaurantId);

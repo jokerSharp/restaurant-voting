@@ -43,6 +43,6 @@ public class UserVoteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@RequestBody VoteTo voteTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("vote for the restaurant id={} as the user with id={}", voteTo.getRestaurantId(), authUser.id());
-        voteService.processVote(voteTo.getRestaurantId(), authUser.getUser());
+        voteService.processVote(voteTo, authUser.getUser());
     }
 }

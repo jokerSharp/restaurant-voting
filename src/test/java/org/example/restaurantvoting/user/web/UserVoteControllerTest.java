@@ -8,11 +8,9 @@ import org.example.restaurantvoting.restaurant.to.VoteTo;
 import org.example.restaurantvoting.user.UserTestData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.*;
@@ -21,20 +19,21 @@ import static org.example.restaurantvoting.restaurant.RestaurantTestData.RESTAUR
 import static org.example.restaurantvoting.user.VoteTestData.*;
 import static org.example.restaurantvoting.user.web.UserVoteController.REST_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserVoteControllerTest extends AbstractControllerTest {
 
     private static final LocalTime VOTE_BEFORE_END_TIME = LocalTime.of(10, 0);
     private static final LocalTime VOTE_END_TIME = LocalTime.of(11, 0);
-    private static final LocalDate VOTE_END_DATE = LocalDate.now();
-    private static final LocalDateTime VOTE_END = LocalDateTime.of(VOTE_END_DATE, VOTE_END_TIME);
-    private static final LocalDateTime VOTE_BEFORE_END = LocalDateTime.of(VOTE_END_DATE, VOTE_BEFORE_END_TIME);
+    private static final LocalDate VOTE_DATE = LocalDate.now();
+    private static final LocalDateTime VOTE_END = LocalDateTime.of(VOTE_DATE, VOTE_END_TIME);
+    private static final LocalDateTime VOTE_BEFORE_END = LocalDateTime.of(VOTE_DATE, VOTE_BEFORE_END_TIME);
 
     @Autowired
     private VoteRepository voteRepository;
 
-    @Autowired
+    @MockitoBean
     private Clock clock;
 
     @Test
@@ -55,6 +54,9 @@ class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void vote() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_BEFORE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
         VoteTo newTo = new VoteTo(null, 1, LocalDate.now(clock));
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,21 +65,25 @@ class UserVoteControllerTest extends AbstractControllerTest {
         assertEquals(RESTAURANT_1_ID, voteRepository.getExisted(3).getRestaurant().getId());
     }
 
-//    @Test
-//    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-//    void reVotePositive() throws Exception {
-//        ReflectionTestUtils.setField(clock, "instant", VOTE_BEFORE_END.toInstant(ZoneOffset.UTC));
-//        ReflectionTestUtils.setField(clock, "zone", ZoneOffset.UTC);
-//        VoteTo newTo = new VoteTo(2, 1);
-//        perform(MockMvcRequestBuilders.put(REST_URL)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(JsonUtil.writeValue(newTo)))
-//                .andExpect(status().isNoContent());
-//    }
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void reVotePositive() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_BEFORE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
+        VoteTo newTo = new VoteTo(2, 1, LocalDate.now(clock));
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newTo)))
+                .andExpect(status().isNoContent());
+    }
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void reVoteNegative() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
         VoteTo newTo = new VoteTo(2, 1, LocalDate.now(clock));
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,6 +94,9 @@ class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void voteNotFound() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_BEFORE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
         VoteTo newTo = new VoteTo(null, RestaurantTestData.NOT_FOUND, LocalDate.now(clock));
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -98,20 +107,13 @@ class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.JUST_ADMIN_MAIL)
     void voteForbidden() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_BEFORE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
         VoteTo newTo = new VoteTo(null, 1, LocalDate.now(clock));
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andExpect(status().isForbidden());
-    }
-
-    @TestConfiguration
-    static class CustomClockConfiguration {
-
-        @Bean
-        @Primary
-        public Clock fixedClock() {
-            return Clock.fixed(VOTE_END.toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
-        }
     }
 }
