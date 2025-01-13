@@ -24,7 +24,7 @@ public class AdminUserController extends AbstractUserController {
 
     static final String REST_URL = "/api/admin/users";
 
-    @Cacheable("users")
+
     @Override
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
@@ -39,6 +39,7 @@ public class AdminUserController extends AbstractUserController {
         super.delete(id);
     }
 
+    @Cacheable("users")
     @GetMapping
     public List<User> getAll() {
         log.info("getAll");
@@ -66,7 +67,6 @@ public class AdminUserController extends AbstractUserController {
         repository.prepareAndSave(user);
     }
 
-    @Cacheable("users")
     @GetMapping("/by-email")
     public User getByEmail(@RequestParam String email) {
         log.info("getByEmail {}", email);

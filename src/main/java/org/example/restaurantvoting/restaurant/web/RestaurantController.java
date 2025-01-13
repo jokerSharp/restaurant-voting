@@ -47,9 +47,10 @@ public class RestaurantController {
                 .toList();
     }
 
-    @GetMapping("with-dishes")
+    @Cacheable("restaurants")
+    @GetMapping("with-current-day-dishes")
     public List<RestaurantTo> getAllWithDishes() {
-        log.info("get all restaurants with dishes");
+        log.info("get all restaurants with the current day dishes");
         return restaurantRepository.findWithDishes().stream()
                 .map(RestaurantsUtil::createToWithDishesFromRestaurant)
                 .toList();
