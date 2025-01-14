@@ -23,6 +23,8 @@ import static org.example.restaurantvoting.common.exception.ErrorType.BAD_DATA;
 @AllArgsConstructor
 public class VoteService {
 
+    public static final String EXCEPTION_VOTE_AFTER_END_TIME = "You have already made your choice for today";
+    public static final String EXCEPTION_VOTE_OTHER_DAY = "You can vote only for the current day's menu";
     private static final LocalTime VOTE_END_TIME = LocalTime.of(11, 0);
 
     private final VoteRepository voteRepository;
@@ -52,7 +54,7 @@ public class VoteService {
     public void processVote(VoteTo voteTo, User user) {
         LocalDate voteDate = voteTo.getVoteDate();
         if (!voteDate.isEqual(LocalDate.now(clock))) {
-            throw new AppException("You cannot change another day vote", BAD_DATA);
+            throw new AppException(EXCEPTION_VOTE_OTHER_DAY, BAD_DATA);
         }
         int restaurantId = voteTo.getRestaurantId();
         Optional<Vote> currentDayVote = findCurrentDayVote(user);
@@ -62,7 +64,7 @@ public class VoteService {
         } else if (LocalTime.now(clock).isBefore(VOTE_END_TIME)) {
             reVote(restaurantId, user.getId());
         } else {
-            throw new AppException("You have already made your choice for today", BAD_DATA);
+            throw new AppException(EXCEPTION_VOTE_AFTER_END_TIME, BAD_DATA);
         }
     }
 }

@@ -4,6 +4,7 @@ import org.example.restaurantvoting.AbstractControllerTest;
 import org.example.restaurantvoting.common.util.JsonUtil;
 import org.example.restaurantvoting.restaurant.RestaurantTestData;
 import org.example.restaurantvoting.restaurant.repository.VoteRepository;
+import org.example.restaurantvoting.restaurant.service.VoteService;
 import org.example.restaurantvoting.restaurant.to.VoteTo;
 import org.example.restaurantvoting.user.UserTestData;
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,15 @@ import java.time.*;
 import static org.example.restaurantvoting.restaurant.RestaurantTestData.RESTAURANT_1_ID;
 import static org.example.restaurantvoting.user.VoteTestData.*;
 import static org.example.restaurantvoting.user.web.UserVoteController.REST_URL;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserVoteControllerTest extends AbstractControllerTest {
+
+    private static final String REST_URL_CURRENT_DAY = REST_URL + "/current-day";
 
     private static final LocalTime VOTE_BEFORE_END_TIME = LocalTime.of(10, 0);
     private static final LocalTime VOTE_END_TIME = LocalTime.of(11, 0);
@@ -38,7 +43,15 @@ class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void get() throws Exception {
+    void getCurrentDayVote() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_CURRENT_DAY))
+                .andExpect(status().isOk())
+                .andExpect(VOTE_TO_MATCHER.contentJson(vote2));
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(VOTE_TO_MATCHER.contentJson(vote1, vote2));
@@ -47,7 +60,7 @@ class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "/current-day"))
+        perform(MockMvcRequestBuilders.get(REST_URL_CURRENT_DAY))
                 .andExpect(status().isNotFound());
     }
 
@@ -67,6 +80,20 @@ class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void voteNextDay() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
+        VoteTo newTo = new VoteTo(null, 1, LocalDate.now(clock).plusDays(1));
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newTo)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(VoteService.EXCEPTION_VOTE_OTHER_DAY)));
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void reVotePositive() throws Exception {
         when(clock.instant()).thenReturn(VOTE_BEFORE_END.toInstant(ZoneOffset.UTC));
         when(clock.getZone()).thenReturn(ZoneOffset.UTC);
@@ -80,7 +107,7 @@ class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void reVoteNegative() throws Exception {
+    void reVoteAfterEndTime() throws Exception {
         when(clock.instant()).thenReturn(VOTE_END.toInstant(ZoneOffset.UTC));
         when(clock.getZone()).thenReturn(ZoneOffset.UTC);
 
@@ -88,7 +115,22 @@ class UserVoteControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(VoteService.EXCEPTION_VOTE_AFTER_END_TIME)));
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void reVotePreviousDay() throws Exception {
+        when(clock.instant()).thenReturn(VOTE_END.toInstant(ZoneOffset.UTC));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
+        VoteTo newTo = new VoteTo(1, 1, LocalDate.of(2025, Month.JANUARY, 10));
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newTo)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(VoteService.EXCEPTION_VOTE_OTHER_DAY)));
     }
 
     @Test

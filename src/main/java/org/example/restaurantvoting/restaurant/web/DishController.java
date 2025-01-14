@@ -40,13 +40,16 @@ public class DishController {
     public DishTo get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("get dish with id={}", id);
         Optional<Dish> dish = dishRepository.findOneByRestaurantId(restaurantId, id);
-        return DishesUtil.createToFromDish(dish.orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found")));
+        return DishesUtil.createToFromDish(dish
+                .orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found")));
     }
 
     @GetMapping
     public List<DishTo> getAll(@PathVariable int restaurantId) {
         log.info("get all dishes for the restaurant id={}", restaurantId);
-        return dishRepository.findAllByRestaurantId(restaurantId).stream().map(DishesUtil::createToFromDish).toList();
+        return dishRepository.findAllByRestaurantId(restaurantId).stream()
+                .map(DishesUtil::createToFromDish)
+                .toList();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

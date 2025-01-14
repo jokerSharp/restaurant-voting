@@ -2,6 +2,7 @@ package org.example.restaurantvoting.restaurant.web;
 
 import org.example.restaurantvoting.AbstractControllerTest;
 import org.example.restaurantvoting.common.util.JsonUtil;
+import org.example.restaurantvoting.restaurant.DishesUtil;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.repository.DishRepository;
 import org.example.restaurantvoting.restaurant.to.DishTo;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.example.restaurantvoting.restaurant.DishTestData.*;
+import static org.example.restaurantvoting.user.UserTestData.ADMIN_MAIL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -112,7 +114,6 @@ class DishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + BURGER_ID))
-                .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(dishRepository.findById(BURGER_ID).isPresent());
     }
@@ -121,7 +122,17 @@ class DishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
-                .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateHtmlUnsafe() throws Exception {
+        Dish updated = getUpdated();
+        updated.setName("<script>alert(123)</script>");
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + BURGER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(DishesUtil.createToFromDish(updated))))
+                .andExpect(status().isUnprocessableEntity());
     }
 }
