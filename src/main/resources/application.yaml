@@ -13,7 +13,7 @@ spring:
     username: sa
     password:
   cache:
-    cache-names: users, restaurants
+    cache-names: restaurants
     caffeine.spec: maximumSize=5000,expireAfterAccess=60s
   jackson.visibility:
     field: any

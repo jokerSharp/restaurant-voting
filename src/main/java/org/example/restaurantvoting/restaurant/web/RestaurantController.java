@@ -41,7 +41,6 @@ public class RestaurantController {
         binder.addValidators(uniqueRestaurantNameValidator);
     }
 
-    @Cacheable("restaurants")
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable int id) {
         log.info("get restaurant with id={}", id);
