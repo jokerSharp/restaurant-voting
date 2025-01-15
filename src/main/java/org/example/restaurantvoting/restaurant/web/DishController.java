@@ -9,6 +9,7 @@ import org.example.restaurantvoting.restaurant.repository.DishRepository;
 import org.example.restaurantvoting.restaurant.repository.RestaurantRepository;
 import org.example.restaurantvoting.restaurant.to.DishTo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,7 @@ public class DishController {
                 .toList();
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DishTo> createWithLocation(@PathVariable int restaurantId, @Valid @RequestBody DishTo dishTo) {
         log.info("create {}", dishTo);
@@ -68,6 +70,7 @@ public class DishController {
         return ResponseEntity.created(uriOfNewResource).body(dishTo);
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
@@ -79,6 +82,7 @@ public class DishController {
         dishRepository.save(dish);
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
