@@ -31,6 +31,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.nio.file.AccessDeniedException;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class RestExceptionHandler {
             put(DataIntegrityViolationException.class, DATA_CONFLICT);
             put(IllegalArgumentException.class, BAD_DATA);
             put(ValidationException.class, BAD_REQUEST);
+            put(DateTimeParseException.class, BAD_REQUEST);
             put(HttpRequestMethodNotSupportedException.class, BAD_REQUEST);
             put(ServletRequestBindingException.class, BAD_REQUEST);
             put(RequestRejectedException.class, BAD_REQUEST);

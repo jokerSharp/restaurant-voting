@@ -3,6 +3,7 @@ package org.example.restaurantvoting.restaurant.web;
 import org.example.restaurantvoting.AbstractControllerTest;
 import org.example.restaurantvoting.common.util.JsonUtil;
 import org.example.restaurantvoting.restaurant.DishesUtil;
+import org.example.restaurantvoting.restaurant.RestaurantTestData;
 import org.example.restaurantvoting.restaurant.model.Dish;
 import org.example.restaurantvoting.restaurant.repository.DishRepository;
 import org.example.restaurantvoting.restaurant.to.DishTo;
@@ -112,17 +113,34 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void updateDoesntBelong() throws Exception {
+        DishTo updatedTo = getUpdatedTo();
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + PASTA_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + BURGER_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(dishRepository.findById(BURGER_ID).isPresent());
+        assertFalse(dishRepository.findOneByRestaurantId(RestaurantTestData.RESTAURANT_1_ID, BURGER_ID).isPresent());
     }
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    void deleteDoesntBelong() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + PASTA_ID))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

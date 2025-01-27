@@ -77,6 +77,7 @@ public class DishController {
     public void update(@PathVariable int restaurantId, @Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         log.info("update {} with id={}", dishTo, id);
         assureIdConsistent(dishTo, id);
+        dishRepository.getBelonged(restaurantId, id);
         Dish dish = DishesUtil.createDishFromTo(dishTo);
         dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
         dishRepository.save(dish);
@@ -87,6 +88,7 @@ public class DishController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("delete {}", id);
+        dishRepository.getBelonged(restaurantId, id);
         dishRepository.deleteExisted(id);
     }
 }
