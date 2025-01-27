@@ -14,6 +14,7 @@ public class DishTestData {
 
     public static final int BURGER_ID = 1;
     public static final int MEATBALLS_ID = 2;
+    public static final int PASTA_ID = 3;
     public static final int NOT_FOUND = 100;
 
     public static final Dish burger = new Dish(BURGER_ID, "Burger", 9999, LocalDate.of(2025, Month.JANUARY, 10));

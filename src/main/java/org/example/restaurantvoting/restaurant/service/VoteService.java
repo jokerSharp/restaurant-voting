@@ -33,21 +33,12 @@ public class VoteService {
 
     private final Clock clock;
 
-    public Optional<Vote> findCurrentDayVote(User user) {
-        return voteRepository.findByUserAndCreatedAt(user, LocalDate.now());
+    public Optional<Vote> findVoteByDate(User user, LocalDate date) {
+        return voteRepository.findByUserAndCreatedAt(user, date);
     }
 
     public List<Vote> findAll(User user) {
         return voteRepository.findByUser(user);
-    }
-
-    public Vote save(Restaurant restaurant, User user) {
-        Vote newVote = new Vote(restaurant, user);
-        return voteRepository.save(newVote);
-    }
-
-    public void reVote(int restaurantId, int userId) {
-        voteRepository.reVote(restaurantId, userId);
     }
 
     @Transactional
@@ -57,12 +48,13 @@ public class VoteService {
             throw new AppException(EXCEPTION_VOTE_OTHER_DAY, BAD_DATA);
         }
         int restaurantId = voteTo.getRestaurantId();
-        Optional<Vote> currentDayVote = findCurrentDayVote(user);
+        Optional<Vote> currentDayVote = voteRepository.findByUserAndCreatedAt(user, LocalDate.now(clock));
         if (currentDayVote.isEmpty()) {
             Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
-            save(restaurant, user);
+            Vote newVote = new Vote(restaurant, user);
+            voteRepository.save(newVote);
         } else if (LocalTime.now(clock).isBefore(VOTE_END_TIME)) {
-            reVote(restaurantId, user.getId());
+            voteRepository.reVote(restaurantId, user.getId());
         } else {
             throw new AppException(EXCEPTION_VOTE_AFTER_END_TIME, BAD_DATA);
         }

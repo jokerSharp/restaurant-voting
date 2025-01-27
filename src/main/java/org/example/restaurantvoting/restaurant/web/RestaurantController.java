@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.example.restaurantvoting.common.validation.ValidationUtil.assureIdConsistent;
@@ -56,10 +57,11 @@ public class RestaurantController {
     }
 
     @Cacheable("restaurants")
-    @GetMapping("with-current-day-dishes")
-    public List<RestaurantTo> getAllWithDishes() {
-        log.info("get all restaurants with the current day dishes");
-        return restaurantRepository.findWithDishes().stream()
+    @GetMapping("with-dishes")
+    public List<RestaurantTo> getWithDishes(@RequestParam(value = "date", required = false) LocalDate date) {
+        log.info("get all restaurants with dishes");
+        if (date == null) date = LocalDate.now();
+        return restaurantRepository.findWithDishes(date).stream()
                 .map(RestaurantsUtil::createToWithDishesFromRestaurant)
                 .toList();
     }

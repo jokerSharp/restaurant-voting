@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,15 +21,18 @@ import java.util.List;
 public class UserVoteController {
 
     static final String REST_URL = "/api/user/votes";
+    static final String BY_DATE_URL = "/by-date";
 
     @Autowired
     private VoteService voteService;
 
-    @GetMapping("/current-day")
-    public VoteTo getCurrentDayVote(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get the current day vote for a user with id={}", authUser.getUser().getId());
-        return VotesUtil.createToFromVote(voteService.findCurrentDayVote(authUser.getUser())
-                .orElseThrow(() -> new NotFoundException("Current day vote is not found")));
+    @GetMapping(BY_DATE_URL)
+    public VoteTo get(@AuthenticationPrincipal AuthUser authUser,
+                      @RequestParam(value = "date", required = false) LocalDate date) {
+        if (date == null) date = LocalDate.now();
+        log.info("get the vote for the user with id={} for the date={}", authUser.getUser().getId(), date);
+        return VotesUtil.createToFromVote(voteService.findVoteByDate(authUser.getUser(), date)
+                .orElseThrow(() -> new NotFoundException("Vote for that date is not found")));
     }
 
     @GetMapping

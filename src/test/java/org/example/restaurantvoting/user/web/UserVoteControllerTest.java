@@ -18,6 +18,7 @@ import java.time.*;
 
 import static org.example.restaurantvoting.restaurant.RestaurantTestData.RESTAURANT_1_ID;
 import static org.example.restaurantvoting.user.VoteTestData.*;
+import static org.example.restaurantvoting.user.web.UserVoteController.BY_DATE_URL;
 import static org.example.restaurantvoting.user.web.UserVoteController.REST_URL;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserVoteControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL_CURRENT_DAY = REST_URL + "/current-day";
+    private static final String REST_URL_CURRENT_DAY = REST_URL + BY_DATE_URL;
 
     private static final LocalTime VOTE_BEFORE_END_TIME = LocalTime.of(10, 0);
     private static final LocalTime VOTE_END_TIME = LocalTime.of(11, 0);
